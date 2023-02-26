@@ -10,8 +10,8 @@ import {
   SpinnerSize
 } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { Chapter, Variant } from 'calc-slang/dist/types';
-import { stringify } from 'calc-slang/dist/utils/stringify';
+import { Chapter, Variant } from 'Clang-slang/dist/types';
+import { stringify } from 'Clang-slang/dist/utils/stringify';
 import classNames from 'classnames';
 import { isEqual } from 'lodash';
 import * as React from 'react';

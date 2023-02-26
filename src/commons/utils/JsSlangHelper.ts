@@ -1,7 +1,7 @@
 /* tslint:disable: ban-types*/
-import createSlangContext from 'calc-slang/dist/createContext';
-import { Context, Value, Variant } from 'calc-slang/dist/types';
-import { stringify } from 'calc-slang/dist/utils/stringify';
+import createSlangContext from 'Clang-slang/dist/createContext';
+import { Context, Value, Variant } from 'Clang-slang/dist/types';
+import { stringify } from 'Clang-slang/dist/utils/stringify';
 import { difference, keys } from 'lodash';
 import EnvVisualizer from 'src/features/envVisualizer/EnvVisualizer';
 
@@ -134,7 +134,6 @@ export function createContext<T>(
 ) {
   return createSlangContext<T>(variant, externals, externalContext);
 }
-
 
 // Given a Context, returns a privileged Context that when referenced,
 // intercepts reads from the underlying Context and returns desired values

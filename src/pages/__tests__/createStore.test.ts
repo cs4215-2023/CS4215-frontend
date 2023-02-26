@@ -1,4 +1,4 @@
-import { Variant } from 'calc-slang/dist/types';
+import { Variant } from 'Clang-slang/dist/types';
 import { compressToUTF16 } from 'lz-string';
 
 import { defaultState, OverallState } from '../../commons/application/ApplicationTypes';

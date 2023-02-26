@@ -1,4 +1,4 @@
-import { stringify } from 'calc-slang/dist/utils/stringify';
+import { stringify } from 'Clang-slang/dist/utils/stringify';
 import { Reducer } from 'redux';
 
 import { SourcecastReducer } from '../../features/sourceRecorder/sourcecast/SourcecastReducer';

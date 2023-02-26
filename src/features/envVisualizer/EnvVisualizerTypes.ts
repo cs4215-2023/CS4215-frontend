@@ -1,8 +1,8 @@
 import {
   EnvTree as EnvironmentTree,
   EnvTreeNode as EnvironmentTreeNode
-} from 'calc-slang/dist/createContext';
-import { Environment } from 'calc-slang/dist/types';
+} from 'Clang-slang/dist/createContext';
+import { Environment } from 'Clang-slang/dist/types';
 import { KonvaEventObject } from 'konva/lib/Node';
 import React from 'react';
 

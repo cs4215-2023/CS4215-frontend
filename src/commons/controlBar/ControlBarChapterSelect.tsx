@@ -1,7 +1,7 @@
 import { Button, Classes, Menu, MenuItem } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { ItemListRenderer, ItemRenderer, Select } from '@blueprintjs/select';
-import { Chapter, Variant } from 'calc-slang/dist/types';
+import { Chapter, Variant } from 'Clang-slang/dist/types';
 import React from 'react';
 
 import {
@@ -25,11 +25,7 @@ type StateProps = {
 
 const chapterListRenderer: ItemListRenderer<SALanguage> = ({ itemsParentRef, renderItem }) => {
   const defaultChoices = defaultLanguages.map(renderItem);
-  return (
-    <Menu ulRef={itemsParentRef}>
-      {defaultChoices}
-    </Menu>
-  );
+  return <Menu ulRef={itemsParentRef}>{defaultChoices}</Menu>;
 };
 
 const chapterRenderer: ItemRenderer<SALanguage> = (lang, { handleClick }) => (

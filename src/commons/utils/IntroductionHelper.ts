@@ -1,4 +1,4 @@
-import { Chapter, Variant } from 'calc-slang/dist/types';
+import { Chapter, Variant } from 'Clang-slang/dist/types';
 
 import { Links } from './Constants';
 
@@ -13,11 +13,8 @@ and also the [_Source Academy keyboard shortcuts_](${Links.sourceHotkeys}).
 
 `;
 
-
 const generateIntroductionText = (sourceChapter: Chapter, sourceVariant: Variant) => {
-  return (
-    MAIN_INTRODUCTION +  HOTKEYS_INTRODUCTION
-  );
+  return MAIN_INTRODUCTION + HOTKEYS_INTRODUCTION;
 };
 
 export const generateSourceIntroduction = (sourceChapter: Chapter, sourceVariant: Variant) => {
