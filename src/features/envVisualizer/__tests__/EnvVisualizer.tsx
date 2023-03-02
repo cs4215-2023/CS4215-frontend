@@ -1,5 +1,5 @@
-import { runInContext } from 'calc-slang/dist/';
-import createContext from 'calc-slang/dist/createContext';
+import { runInContext } from 'Clang-slang/dist/';
+import createContext from 'Clang-slang/dist/createContext';
 import { Config } from 'src/features/envVisualizer/EnvVisualizerConfig';
 
 import { ArrayUnit } from '../components/ArrayUnit';

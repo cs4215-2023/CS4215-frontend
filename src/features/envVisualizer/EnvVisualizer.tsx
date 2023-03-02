@@ -1,4 +1,4 @@
-import { Context } from 'calc-slang';
+import { Context } from 'Clang-slang';
 import React from 'react';
 
 import { Layout } from './EnvVisualizerLayout';

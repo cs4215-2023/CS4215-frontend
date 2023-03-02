@@ -1,7 +1,7 @@
 import { Card, Classes, Pre } from '@blueprintjs/core';
 import { Ace } from 'ace-builds';
-import { parseError } from 'calc-slang';
-import { Chapter, Variant } from 'calc-slang/dist/types';
+import { parseError } from 'Clang-slang';
+import { Chapter, Variant } from 'Clang-slang/dist/types';
 import classNames from 'classnames';
 import * as React from 'react';
 import { HotKeys } from 'react-hotkeys';
@@ -40,11 +40,7 @@ type OwnProps = {
 
 const Repl: React.FC<ReplProps> = (props: ReplProps) => {
   const cards = props.output.map((slice, index) => (
-    <Output
-      output={slice}
-      key={index}
-      usingSubst={props.usingSubst ?? false}
-    />
+    <Output output={slice} key={index} usingSubst={props.usingSubst ?? false} />
   ));
   return (
     <div className="Repl" style={{ display: props.hidden ? 'none' : undefined }}>

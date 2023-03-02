@@ -1,4 +1,4 @@
-import { Chapter } from 'calc-slang/dist/types';
+import { Chapter } from 'Clang-slang/dist/types';
 
 import { Testcase } from '../assessment/AssessmentTypes';
 

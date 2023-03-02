@@ -2,7 +2,7 @@ import { Classes } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { Octokit } from '@octokit/rest';
 import { Ace, Range } from 'ace-builds';
-import { Chapter, Variant } from 'calc-slang/dist/types';
+import { Chapter, Variant } from 'Clang-slang/dist/types';
 import classNames from 'classnames';
 import _, { isEqual } from 'lodash';
 import { decompressFromEncodedURIComponent } from 'lz-string';
@@ -190,7 +190,6 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
     })
   );
 
-
   const usingRemoteExecution =
     useTypedSelector(state => !!state.session.remoteExecutionSession) && !isSicpEditor;
   // this is still used by remote execution (EV3)
@@ -281,7 +280,6 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
     },
     [hasBreakpoints]
   );
-
 
   const pushLog = React.useCallback(
     (newInput: Input) => {
@@ -379,9 +377,6 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
     [props.handleReplEval, props.isRunning, selectedTab]
   );
 
-
-
-
   const executionTime = React.useMemo(
     () => (
       <ControlBarExecutionTime
@@ -455,8 +450,6 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
 
   const tabs = React.useMemo(() => {
     const tabs: SideContentTab[] = [playgroundIntroductionTab];
-
-
 
     return tabs;
   }, [playgroundIntroductionTab]);
@@ -643,7 +636,7 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
           autorunButtons,
           chapterSelect,
           shareButton,
-          isSicpEditor ? null : sessionButtons,
+          isSicpEditor ? null : sessionButtons
         ]
       },
       selectedTabId: selectedTab,
@@ -676,6 +669,5 @@ const mobileOnlyTabIds: readonly SideContentType[] = [
   SideContentType.mobileEditorRun
 ];
 const desktopOnlyTabIds: readonly SideContentType[] = [SideContentType.introduction];
-
 
 export default Playground;
