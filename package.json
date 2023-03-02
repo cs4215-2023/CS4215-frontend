@@ -35,6 +35,7 @@
     "@szhsin/react-menu": "^3.2.0",
     "@types/react-syntax-highlighter": "^15.5.5",
     "@types/uuid": "^8.3.4",
+    "Clang-slang": "https://github.com/cs4215-2023/c-interpreter",
     "ace-builds": "^1.4.14",
     "acorn": "^8.8.0",
     "ag-grid-community": "^28.0.2",
