@@ -1,18 +1,9 @@
 import { Button, Classes, Dialog, H4, Intent } from '@blueprintjs/core';
 import moment from 'moment';
 import * as React from 'react';
-import { Redirect, Route, RouteComponentProps, Switch } from 'react-router';
+import { RouteComponentProps } from 'react-router';
 
-import Academy from '../../pages/academy/Academy';
-import Contributors from '../../pages/contributors/Contributors';
-import Disabled from '../../pages/disabled/Disabled';
-import GitHubClassroom from '../../pages/githubAssessments/GitHubClassroom';
-import GitHubCallback from '../../pages/githubCallback/GitHubCallback';
-import Login from '../../pages/login/Login';
-import MissionControlContainer from '../../pages/missionControl/MissionControlContainer';
-import NotFound from '../../pages/notFound/NotFound';
 import Playground from '../../pages/playground/PlaygroundContainer';
-import Welcome from '../../pages/welcome/Welcome';
 import { AssessmentConfiguration } from '../assessment/AssessmentTypes';
 import NavigationBar from '../navigationBar/NavigationBar';
 import Constants from '../utils/Constants';
@@ -44,7 +35,7 @@ export type StateProps = {
   agreedToResearch?: boolean | null;
 };
 
-const loginPath = <Route path="/login" component={Login} key="login" />;
+// const loginPath = <Route path="/login" component={Login} key="login" />;
 
 const Application: React.FC<ApplicationProps> = props => {
   const intervalId = React.useRef<number | undefined>(undefined);
@@ -57,9 +48,6 @@ const Application: React.FC<ApplicationProps> = props => {
     Constants.workspaceSettingsLocalStorageKey,
     defaultWorkspaceSettings
   );
-
-  const isLoggedIn = typeof props.name === 'string';
-  const isCourseLoaded = isLoggedIn && typeof props.role === 'string';
 
   // Effect to fetch the latest user info and course configurations from the backend on refresh,
   // if the user was previously logged in
@@ -126,26 +114,6 @@ const Application: React.FC<ApplicationProps> = props => {
     };
   }, [isPWA, isMobile]);
 
-  // Paths common to both deployments
-  const commonPaths = [
-    <Route path="/contributors" component={Contributors} key="contributors" />,
-    <Route path="/callback/github" component={GitHubCallback} key="githubCallback" />,
-    Constants.enableGitHubAssessments ? (
-      <Route
-        path="/githubassessments"
-        render={() => (
-          <GitHubClassroom
-            handleGitHubLogIn={props.handleGitHubLogIn}
-            handleGitHubLogOut={props.handleGitHubLogOut}
-          />
-        )}
-        key="githubAssessments"
-      />
-    ) : null
-  ];
-
-  const isDisabledEffective = !['staff', 'admin'].includes(props.role!) && isDisabled;
-
   return (
     <WorkspaceSettingsContext.Provider value={[workspaceSettings, setWorkspaceSettings]}>
       <div className="Application">
@@ -167,71 +135,7 @@ const Application: React.FC<ApplicationProps> = props => {
           )}
         />
         <div className="Application__main">
-          {isDisabledEffective && (
-            <Switch>
-              {!Constants.playgroundOnly && loginPath}
-              {/* if not logged in, and we're not a playground-only deploy, then redirect to login (for staff) */}
-              {!isCourseLoaded && !Constants.playgroundOnly
-                ? [
-                    <Route path="/courses" render={redirectToLogin} key={0} />,
-                    <Route exact={true} path="/" render={redirectToLogin} key={1} />
-                  ]
-                : []}
-              <Route>
-                <Disabled reason={typeof isDisabled === 'string' ? isDisabled : undefined} />
-              </Route>
-            </Switch>
-          )}
-          {!isDisabledEffective && Constants.playgroundOnly && (
-            <Switch>
-              {commonPaths}
-              <Route path="/playground" component={Playground} />
-              <Route exact={true} path="/">
-                <Redirect to="/playground" />
-              </Route>
-              <Route component={NotFound} />
-            </Switch>
-          )}
-          {!isDisabledEffective && !Constants.playgroundOnly && (
-            <Switch>
-              {loginPath}
-              {commonPaths}
-              <Route path={'/courses/:courseId(\\d+)?'} render={toAcademy(props)} />
-              <Route path="/welcome" render={ensureUserAndRouteTo(props, <Welcome />)} />
-              <Route
-                path={'/mission-control/:assessmentId(-?\\d+)?/:questionId(\\d+)?'}
-                component={MissionControlContainer}
-              />
-              <Route
-                path="/playground"
-                render={ensureUserAndRoleAndRouteTo(props, <Playground />)}
-              />
-
-              <Redirect
-                from="/"
-                exact={true}
-                to={props.courseId != null ? `/courses/${props.courseId}` : '/welcome'}
-              />
-              {props.courseId != null && [
-                <Redirect
-                  from="/sourcecast/:splat?"
-                  to={`/courses/${props.courseId}/sourcecast/:splat?`}
-                  key="legacy-sourcecast"
-                />,
-                <Redirect
-                  from="/achievements/:splat?"
-                  to={`/courses/${props.courseId}/achievements/:splat?`}
-                  key="legacy-achievements"
-                />,
-                <Redirect
-                  from="/academy/:splat?"
-                  to={`/courses/${props.courseId}/:splat?`}
-                  key="legacy-academy"
-                />
-              ]}
-              <Route component={NotFound} />
-            </Switch>
-          )}
+          <Playground />
         </div>
 
         {/* agreedToResearch has a default value of undefined in the store.
@@ -282,24 +186,17 @@ const Application: React.FC<ApplicationProps> = props => {
   );
 };
 
-const redirectToLogin = () => <Redirect to="/login" />;
-const redirectToWelcome = () => <Redirect to="/welcome" />;
-
 /**
  * A user routes to /academy,
  *  1. If the user is logged in, render the Academy component
  *  2. If the user is not logged in, redirect to /login
  */
-const toAcademy = ({ name, role }: ApplicationProps) =>
-  name === undefined ? redirectToLogin : role === undefined ? redirectToWelcome : () => <Academy />;
 
 /**
  * Routes a user to the specified route,
  *  1. If the user is logged in, render the specified component
  *  2. If the user is not logged in, redirect to /login
  */
-const ensureUserAndRouteTo = ({ name }: ApplicationProps, to: JSX.Element) =>
-  name === undefined ? redirectToLogin : () => to;
 
 /**
  * Routes a user to the specified route,
@@ -308,8 +205,6 @@ const ensureUserAndRouteTo = ({ name }: ApplicationProps, to: JSX.Element) =>
  *  2. If the user is not logged in, redirect to /login
  *  3. If the user is logged in, but does not have a course, redirect to /welcome
  */
-const ensureUserAndRoleAndRouteTo = ({ name, role }: ApplicationProps, to: JSX.Element) =>
-  name === undefined ? redirectToLogin : role === undefined ? redirectToWelcome : () => to;
 
 function computeDisabledState() {
   const now = moment();
