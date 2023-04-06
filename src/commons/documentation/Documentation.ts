@@ -1,4 +1,4 @@
-import { SourceDocumentation } from 'CLang-slang';
+import { SourceDocumentation } from 'Clang-slang';
 import { deviceTypes } from 'src/features/remoteExecution/RemoteExecutionTypes';
 
 import { externalLibraries } from '../application/types/ExternalTypes';

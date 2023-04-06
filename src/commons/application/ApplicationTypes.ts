@@ -173,7 +173,9 @@ export const defaultPlayground: PlaygroundState = {
   githubSaveInfo: { repoName: '', filePath: '' }
 };
 
-export const defaultEditorValue = 'int main() { return 1; }';
+export const defaultEditorValue = `int main() { 
+	return 1; 
+}`;
 
 /**
  * Create a default IWorkspaceState for 'resetting' a workspace.
