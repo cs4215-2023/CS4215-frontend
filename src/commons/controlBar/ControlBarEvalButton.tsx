@@ -13,7 +13,7 @@ export const ControlBarEvalButton: React.FC<ControlBarEvalButtonProps> = ({
   handleReplEval,
   isRunning
 }) => {
-  return isRunning ? null : (
+  return (
     <Tooltip2 content="...or press shift-enter in the REPL">
       <ControlButton label="Eval" icon={IconNames.CODE} onClick={handleReplEval} />
     </Tooltip2>

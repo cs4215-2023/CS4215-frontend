@@ -50,7 +50,6 @@ import { ControlBarAutorunButtons } from '../../commons/controlBar/ControlBarAut
 import { ControlBarChapterSelect } from '../../commons/controlBar/ControlBarChapterSelect';
 import { ControlBarClearButton } from '../../commons/controlBar/ControlBarClearButton';
 import { ControlBarEvalButton } from '../../commons/controlBar/ControlBarEvalButton';
-import { ControlBarExecutionTime } from '../../commons/controlBar/ControlBarExecutionTime';
 import { ControlBarSessionButtons } from '../../commons/controlBar/ControlBarSessionButton';
 import { ControlBarShareButton } from '../../commons/controlBar/ControlBarShareButton';
 import { ControlBarStepLimit } from '../../commons/controlBar/ControlBarStepLimit';
@@ -377,17 +376,6 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
     [props.handleReplEval, props.isRunning, selectedTab]
   );
 
-  const executionTime = React.useMemo(
-    () => (
-      <ControlBarExecutionTime
-        execTime={props.execTime}
-        handleChangeExecTime={props.handleChangeExecTime}
-        key="execution_time"
-      />
-    ),
-    [props.execTime, props.handleChangeExecTime]
-  );
-
   const stepperStepLimit = React.useMemo(
     () => (
       <ControlBarStepLimit
@@ -604,7 +592,7 @@ const Playground: React.FC<PlaygroundProps> = ({ workspaceLocation = 'playground
           ? null
           : props.usingSubst
           ? stepperStepLimit
-          : executionTime
+          : null
       ]
     },
     editorContainerProps: editorContainerProps,

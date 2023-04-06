@@ -30,8 +30,6 @@ import {
   getDifferenceInMethods,
   getRestoreExtraMethodsString,
   getStoreExtraMethodsString,
-  highlightClean,
-  highlightLine,
   makeElevatedContext
 } from '../utils/JsSlangHelper';
 import { showSuccessMessage, showWarningMessage } from '../utils/NotificationsHelper';
@@ -125,12 +123,6 @@ export default function* WorkspaceSaga(): SagaIterator {
   yield takeEvery(
     HIGHLIGHT_LINE,
     function* (action: ReturnType<typeof actions.highlightEditorLine>) {
-      const highlightedLines = action.payload.highlightedLines;
-      if (highlightedLines.length === 0) {
-        highlightClean();
-      } else {
-        highlightLine(highlightedLines[0]);
-      }
       yield;
     }
   );
