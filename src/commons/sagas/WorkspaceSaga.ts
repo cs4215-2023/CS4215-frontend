@@ -1,12 +1,10 @@
-import { Context, findDeclaration, interrupt, runInContext } from 'Clang-slang';
-import { InterruptedError } from 'Clang-slang/dist/errors/errors';
+import { Context, runInContext } from 'Clang-slang';
 import { parse } from 'Clang-slang/dist/parser/parser';
 import { Chapter, Variant } from 'Clang-slang/dist/types';
 import { random } from 'lodash';
 import Phaser from 'phaser';
 import { SagaIterator } from 'redux-saga';
 import { call, put, race, select, StrictEffect, take } from 'redux-saga/effects';
-import EnvVisualizer from 'src/features/envVisualizer/EnvVisualizer';
 
 import { EventType } from '../../features/achievement/AchievementTypes';
 import DataVisualizer from '../../features/dataVisualizer/dataVisualizer';
@@ -34,8 +32,7 @@ import {
   getStoreExtraMethodsString,
   highlightClean,
   highlightLine,
-  makeElevatedContext,
-  visualizeEnv
+  makeElevatedContext
 } from '../utils/JsSlangHelper';
 import { showSuccessMessage, showWarningMessage } from '../utils/NotificationsHelper';
 import { notifyProgramEvaluated } from '../workspace/WorkspaceActions';
@@ -232,7 +229,6 @@ export default function* WorkspaceSaga(): SagaIterator {
     BEGIN_CLEAR_CONTEXT,
     function* (action: ReturnType<typeof actions.beginClearContext>) {
       DataVisualizer.clear();
-      EnvVisualizer.clear();
       const globals: Array<[string, any]> = action.payload.library.globals as Array<[string, any]>;
       for (const [key, value] of globals) {
         window[key] = value;
@@ -257,24 +253,11 @@ export default function* WorkspaceSaga(): SagaIterator {
     NAV_DECLARATION,
     function* (action: ReturnType<typeof actions.navigateToDeclaration>) {
       const workspaceLocation = action.payload.workspaceLocation;
-      const code: string = yield select(
+      yield select(
         // TODO: Hardcoded to make use of the first editor tab. Rewrite after editor tabs are added.
         (state: OverallState) => state.workspaces[workspaceLocation].editorTabs[0].value
       );
       context = yield select((state: OverallState) => state.workspaces[workspaceLocation].context);
-
-      const result = findDeclaration(code, context, {
-        line: action.payload.cursorPosition.row + 1,
-        column: action.payload.cursorPosition.column
-      });
-      if (result) {
-        yield put(
-          actions.moveCursor(action.payload.workspaceLocation, {
-            row: result.start.line - 1,
-            column: result.start.column
-          })
-        );
-      }
     }
   );
 
@@ -314,7 +297,6 @@ function* updateInspector(workspaceLocation: WorkspaceLocation): SagaIterator {
     const start = lastDebuggerResult.context.runtime.nodes[0].loc.start.line - 1;
     const end = lastDebuggerResult.context.runtime.nodes[0].loc.end.line - 1;
     yield put(actions.highlightEditorLine([start, end], workspaceLocation));
-    visualizeEnv(lastDebuggerResult);
   } catch (e) {
     yield put(actions.highlightEditorLine([], workspaceLocation));
     // most likely harmless, we can pretty much ignore this.
@@ -536,7 +518,7 @@ export function* evalCode(
     (state: OverallState) => state.workspaces[workspaceLocation].stepLimit
   );
 
-  const { result, interrupted, paused } = yield race({
+  const { result, paused } = yield race({
     result: call(runInContext, code, context, {
       scheduler: 'preemptive',
       executionMethod: 'interpreter',
@@ -553,15 +535,15 @@ export function* evalCode(
     interrupted: take(BEGIN_INTERRUPT_EXECUTION),
     paused: take(BEGIN_DEBUG_PAUSE)
   });
-  if (interrupted) {
-    interrupt(context);
-    /* Redundancy, added ensure that interruption results in an error. */
-    context.errors.push(new InterruptedError(context.runtime.nodes[0]));
-    yield put(actions.debuggerReset(workspaceLocation));
-    yield put(actions.endInterruptExecution(workspaceLocation));
-    yield call(showWarningMessage, 'Execution aborted', 750);
-    return;
-  }
+  //   if (interrupted) {
+  //     interrupt(context);
+  //     /* Redundancy, added ensure that interruption results in an error. */
+  //     context.errors.push(new InterruptedError(context.runtime.nodes[0]));
+  //     yield put(actions.debuggerReset(workspaceLocation));
+  //     yield put(actions.endInterruptExecution(workspaceLocation));
+  //     yield call(showWarningMessage, 'Execution aborted', 750);
+  //     return;
+  //   }
 
   if (paused) {
     yield put(actions.endDebuggerPause(workspaceLocation));
@@ -620,7 +602,7 @@ export function* evalTestCode(
   type: TestcaseType
 ) {
   yield put(actions.resetTestcase(workspaceLocation, index));
-  const { result, interrupted } = yield race({
+  const { result } = yield race({
     result: call(runInContext, code, context, {
       scheduler: 'preemptive',
       originalMaxExecTime: execTime,
@@ -633,15 +615,15 @@ export function* evalTestCode(
     interrupted: take(BEGIN_INTERRUPT_EXECUTION)
   });
 
-  if (interrupted) {
-    interrupt(context);
-    yield* dumpDisplayBuffer(workspaceLocation);
-    // Redundancy, added ensure that interruption results in an error.
-    context.errors.push(new InterruptedError(context.runtime.nodes[0]));
-    yield put(actions.endInterruptExecution(workspaceLocation));
-    yield call(showWarningMessage, `Execution of testcase ${index} aborted`, 750);
-    return;
-  }
+  //   if (interrupted) {
+  //     interrupt(context);
+  //     yield* dumpDisplayBuffer(workspaceLocation);
+  //     // Redundancy, added ensure that interruption results in an error.
+  //     context.errors.push(new InterruptedError(context.runtime.nodes[0]));
+  //     yield put(actions.endInterruptExecution(workspaceLocation));
+  //     yield call(showWarningMessage, `Execution of testcase ${index} aborted`, 750);
+  //     return;
+  //   }
 
   yield* dumpDisplayBuffer(workspaceLocation);
   /** result.status here is either 'error' or 'finished'; 'suspended' is not possible

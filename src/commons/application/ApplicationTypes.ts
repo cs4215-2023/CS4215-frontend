@@ -173,7 +173,7 @@ export const defaultPlayground: PlaygroundState = {
   githubSaveInfo: { repoName: '', filePath: '' }
 };
 
-export const defaultEditorValue = '1+1';
+export const defaultEditorValue = 'int main() { return 1; }';
 
 /**
  * Create a default IWorkspaceState for 'resetting' a workspace.
@@ -187,9 +187,7 @@ export const createDefaultWorkspace = (workspaceLocation: WorkspaceLocation): Wo
   activeEditorTabIndex: 0,
   editorTabs: [
     {
-      value: ['playground', 'sourcecast', 'githubAssessments'].includes(workspaceLocation)
-        ? defaultEditorValue
-        : '',
+      value: defaultEditorValue,
       prependValue: '',
       postpendValue: '',
       highlightedLines: [],

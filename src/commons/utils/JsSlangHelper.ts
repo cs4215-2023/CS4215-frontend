@@ -3,7 +3,6 @@ import createSlangContext from 'Clang-slang/dist/createContext';
 import { Context, Value, Variant } from 'Clang-slang/dist/types';
 import { stringify } from 'Clang-slang/dist/utils/stringify';
 import { difference, keys } from 'lodash';
-import EnvVisualizer from 'src/features/envVisualizer/EnvVisualizer';
 
 import DataVisualizer from '../../features/dataVisualizer/dataVisualizer';
 import { Data } from '../../features/dataVisualizer/dataVisualizerTypes';
@@ -87,14 +86,6 @@ function visualizeData(...args: Data[]) {
   } catch (err) {
     console.log(err);
     throw new Error('Data visualizer is not enabled');
-  }
-}
-
-export function visualizeEnv({ context }: { context: Context }) {
-  try {
-    EnvVisualizer.drawEnv(context);
-  } catch (err) {
-    throw new Error('Env visualizer is not enabled');
   }
 }
 

@@ -1,6 +1,3 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-
 import { DebuggerContext, WorkspaceLocation } from '../workspace/WorkspaceTypes';
 import { ModuleSideContent, SideContentTab, SideContentType } from './SideContentTypes';
 
@@ -40,20 +37,21 @@ export const getDynamicTabs = (debuggerContext: DebuggerContext): SideContentTab
  */
 export const getModuleTabs = (debuggerContext: DebuggerContext): ModuleSideContent[] => {
   // Check if Clang-slang's context object is null
-  if (debuggerContext.context == null) {
-    return [];
-  }
+  return [];
+  //   if (debuggerContext.context == null) {
+  //     return [];
+  //   }
 
-  // Get module contexts
-  const rawModuleContexts = debuggerContext.context.moduleContexts;
-  if (rawModuleContexts == null) {
-    return [];
-  }
+  //   // Get module contexts
+  //   const rawModuleContexts = debuggerContext.context.moduleContexts;
+  //   if (rawModuleContexts == null) {
+  //     return [];
+  //   }
 
-  // Pass React into functions
-  const moduleTabs: ModuleSideContent[] = Object.values(rawModuleContexts).flatMap(
-    context => context.tabs?.map((tab: any) => tab(React, ReactDOM)) ?? []
-  );
+  //   // Pass React into functions
+  //   const moduleTabs: ModuleSideContent[] = Object.values(rawModuleContexts).flatMap(
+  //     context => context.tabs?.map((tab: any) => tab(React, ReactDOM)) ?? []
+  //   );
 
-  return moduleTabs;
+  //   return moduleTabs;
 };
